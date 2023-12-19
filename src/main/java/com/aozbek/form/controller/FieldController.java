@@ -15,7 +15,7 @@ public class FieldController {
     FieldController(FieldRepository fieldRepository) { this.fieldRepository = fieldRepository; }
 
     @PostMapping(value = "/new")
-    FormField createField(@RequestBody FormField formField) {
+    public FormField createField(@RequestBody FormField formField) {
         return fieldRepository.save(formField);
     }// When I add users I also need to check if the request was sent by an existing user.
 }

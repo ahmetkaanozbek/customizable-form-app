@@ -26,7 +26,7 @@ public class User implements UserDetails {
     private String password;
 
     /* Adding default role of USER for now. App doesn't need various roles right now.
-    *  There could be ADMIN role in the future (add Roles enum). */
+    *  There could be ADMIN role in the future (add Roles enum). List<Roles> role */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> list = new ArrayList<>();
