@@ -6,7 +6,6 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +21,7 @@ public class UserController {
     ResponseEntity<String> createUser(@RequestBody @Valid User user) {
 
         if (userService.createUser(user))
-            return ResponseEntity.status(HttpStatus.CREATED).body("This is a unique username.");
+            return ResponseEntity.status(HttpStatus.CREATED).body("Your registration has been successful.");
         else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username already exists.");
         }
