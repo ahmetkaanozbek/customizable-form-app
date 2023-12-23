@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "responses")
@@ -15,6 +16,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class FormResponse {
     @Id
     private String id;
-    private String fieldType;
     private Object responseValue;
+    private String formFieldId;
 }
