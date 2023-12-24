@@ -1,9 +1,7 @@
 package com.aozbek.form.controller;
 
 import com.aozbek.form.exceptions.FieldNotFoundException;
-import com.aozbek.form.model.FormField;
 import com.aozbek.form.model.FormResponse;
-import com.aozbek.form.repository.FieldRepository;
 import com.aozbek.form.service.ResponseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/form/responses")
