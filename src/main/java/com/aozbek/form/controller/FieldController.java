@@ -1,15 +1,10 @@
 package com.aozbek.form.controller;
 
-import com.aozbek.form.enums.FieldTypes;
 import com.aozbek.form.exceptions.FormNotFoundException;
-import com.aozbek.form.model.Form;
 import com.aozbek.form.model.FormField;
-import com.aozbek.form.repository.FieldRepository;
-import com.aozbek.form.repository.FormRepository;
 import com.aozbek.form.service.FieldService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
