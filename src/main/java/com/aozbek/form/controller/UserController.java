@@ -23,7 +23,7 @@ public class UserController {
         if (userService.createUser(user))
             return ResponseEntity.status(HttpStatus.CREATED).body("Your registration has been successful.");
         else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username already exists.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This Username already exists.");
         }
     }
 }

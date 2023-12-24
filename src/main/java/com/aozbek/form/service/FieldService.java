@@ -34,8 +34,9 @@ public class FieldService {
                 String fieldType = formField.getFieldType().toUpperCase();
                 return fieldType.equals(FieldTypes.TEXT.name()) || fieldType.equals(FieldTypes.NUMBER.name());
             }
-            else
+            else {
                 throw new FormNotFoundException("There is no available form in database with this ID: " +
                         formField.getFormId());
+            }
     }
 }
