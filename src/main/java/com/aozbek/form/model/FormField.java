@@ -18,6 +18,6 @@ public class FormField {
     private String id;
     private String fieldLabel;
     private String fieldType;
-    @DBRef
-    private Form form;
+    // Reference to Form
+    private String formId;
 }

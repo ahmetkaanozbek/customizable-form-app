@@ -28,7 +28,7 @@ public class ResponseController {
     }
 
     @PostMapping(value = "/submit")
-    ResponseEntity<String> createResponse(@RequestBody List<FormResponse> formResponses) {
+    public ResponseEntity<String> createResponse(@RequestBody List<FormResponse> formResponses) {
         for (FormResponse formResponse : formResponses) {
             String fieldId = formResponse.getFormFieldId();
             Optional<FormField> associatedField = fieldRepository.getFormFieldById(fieldId);

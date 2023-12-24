@@ -16,5 +16,6 @@ public class FormResponse {
     @Id
     private String id;
     private Object responseValue;
+    // Reference to FormField
     private String formFieldId;
 }
