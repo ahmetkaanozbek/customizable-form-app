@@ -17,7 +17,7 @@ public class UserController {
     UserService userService;
     @Autowired
     UserController(UserService userService) { this.userService = userService; }
-    @PostMapping(value = "/register")
+    @PostMapping(value = "/no-usage")
     ResponseEntity<String> createUser(@RequestBody @Valid User user) {
 
         if (userService.createUser(user))
