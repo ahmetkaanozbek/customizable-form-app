@@ -1,32 +1,31 @@
 package com.aozbek.form.service;
 
+import com.aozbek.form.dto.FormDto;
+import com.aozbek.form.mapper.FormMapper;
 import com.aozbek.form.model.Form;
 import com.aozbek.form.model.User;
 import com.aozbek.form.repository.FormRepository;
-import com.aozbek.form.repository.UserRepository;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
-import java.util.NoSuchElementException;
 
 @Service
 public class FormService {
     private final FormRepository formRepository;
-    private final UserRepository userRepository;
+    private final AuthService authService;
+    private final FormMapper formMapper;
 
-    public FormService(FormRepository formRepository, UserRepository userRepository) {
+    public FormService(FormRepository formRepository,
+                       AuthService authService,
+                       FormMapper formMapper) {
         this.formRepository = formRepository;
-        this.userRepository = userRepository;
+        this.authService = authService;
+        this.formMapper = formMapper;
     }
 
-    public void createForm(Form form) {
-        String username = SecurityContextHolder
-                .getContext().getAuthentication().getName();
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new NoSuchElementException("User not found for that username"));
+    public void createForm(FormDto formDto) {
+        User user = authService.getCurrentUser();
         String userId = user.getId();
-        System.out.println("User id of the user is: " + userId);
-        form.setUserId(userId);
+        // System.out.println("User id of the user is: " + userId);
+        Form form = formMapper.map(formDto, userId);
         formRepository.save(form);
     }
 }

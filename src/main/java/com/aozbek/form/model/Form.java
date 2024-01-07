@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.Instant;
+
 @Document(collection = "forms")
 @Getter
 @Setter
@@ -17,6 +19,7 @@ public class Form {
     private String id;
     private String formName;
     private String description;
+    private Instant createdDate;
     /* reference to user */
     private String userId;
 }
