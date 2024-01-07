@@ -23,11 +23,19 @@ public class FormController {
         );
     }
 
-    @PatchMapping(value = "/edit/{FormId}")
-    public ResponseEntity<String> editForm(@RequestBody FormDto formDto, @PathVariable String FormId) {
-        formService.editForm(formDto, FormId);
+    @PatchMapping(value = "/edit/{formId}")
+    public ResponseEntity<String> editForm(@RequestBody FormDto formDto, @PathVariable String formId) {
+        formService.editForm(formDto, formId);
         return ResponseEntity.status(HttpStatus.OK).body(
                 "Form update has been made successfully."
+        );
+    }
+
+    @DeleteMapping(value = "/delete/{formId}")
+    public ResponseEntity<String> deleteForm(@PathVariable String formId) {
+        formService.deleteForm(formId);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                "Form has been deleted successfully."
         );
     }
 }

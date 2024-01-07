@@ -33,10 +33,16 @@ public class FormService {
     }
 
     public void editForm(FormDto formDto, String formId) {
-        Form form = formRepository.findById(formId)
+        Form form = formRepository.getFormById(formId)
                 .orElseThrow(() -> new NoSuchElementException("No form exist with this id."));
         form.setFormName(formDto.getFormName());
         form.setDescription(formDto.getDescription());
         formRepository.save(form);
+    }
+
+    public void deleteForm(String formId) {
+        Form form = formRepository.getFormById(formId)
+                .orElseThrow(() -> new NoSuchElementException("No form exist with this id."));
+        formRepository.delete(form);
     }
 }
