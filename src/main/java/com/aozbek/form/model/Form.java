@@ -8,7 +8,7 @@ import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "Form")
+@Document(collection = "forms")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,7 +18,6 @@ public class Form {
     private String id;
     private String formName;
     private String description;
-    /* Obtain User by getByUsername method */
-    @DBRef
-    private User user;
+    /* reference to user */
+    private String userId;
 }

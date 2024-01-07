@@ -3,6 +3,9 @@ package com.aozbek.form.controller;
 import com.aozbek.form.model.Form;
 import com.aozbek.form.service.FormService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,9 +16,12 @@ public class FormController {
     @Autowired
     public FormController(FormService formService) { this.formService = formService; }
 
-    @PostMapping("/new")
-    public Form createForm(@RequestBody Form form) {
-        return formService.createForm(form);
+    @PostMapping("/create")
+    public ResponseEntity<String> createForm(@RequestBody Form form) {
+        formService.createForm(form);
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                "A new form has been created successfully."
+        );
     }
 
 }

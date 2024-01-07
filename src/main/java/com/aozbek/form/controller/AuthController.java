@@ -4,6 +4,7 @@ import com.aozbek.form.dto.AuthResponse;
 import com.aozbek.form.dto.LoginRequest;
 import com.aozbek.form.dto.RegisterRequest;
 import com.aozbek.form.service.AuthService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +21,7 @@ public class AuthController {
     public AuthController(AuthService authService) { this.authService = authService; }
 
     @PostMapping(value = "/register")
-    public ResponseEntity<String> signup(@RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<String> signup(@RequestBody @Valid RegisterRequest registerRequest) {
         authService.signup(registerRequest);
         return ResponseEntity.status(HttpStatus.OK).body("Your registration has been made successfully.");
     }
@@ -28,6 +29,5 @@ public class AuthController {
     @PostMapping(value = "/login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(authService.login(loginRequest));
-
     }
 }
