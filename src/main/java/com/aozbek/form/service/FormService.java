@@ -5,7 +5,6 @@ import com.aozbek.form.mapper.FormMapper;
 import com.aozbek.form.model.Form;
 import com.aozbek.form.model.User;
 import com.aozbek.form.repository.FormRepository;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
