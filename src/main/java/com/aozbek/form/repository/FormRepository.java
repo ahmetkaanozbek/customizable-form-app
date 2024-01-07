@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface FormRepository extends MongoRepository<Form, String> {
     Optional<Form> getFormById(String id);
+    @Override
+    Optional<Form> findById(String id);
 }

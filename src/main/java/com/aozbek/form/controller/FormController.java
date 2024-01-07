@@ -15,11 +15,19 @@ public class FormController {
     @Autowired
     public FormController(FormService formService) { this.formService = formService; }
 
-    @PostMapping("/create")
+    @PostMapping(value = "/create")
     public ResponseEntity<String> createForm(@RequestBody FormDto formDto) {
         formService.createForm(formDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 "A new form has been created successfully."
+        );
+    }
+
+    @PatchMapping(value = "/edit/{FormId}")
+    public ResponseEntity<String> editForm(@RequestBody FormDto formDto, @PathVariable String FormId) {
+        formService.editForm(formDto, FormId);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                "Form update has been made successfully."
         );
     }
 }
