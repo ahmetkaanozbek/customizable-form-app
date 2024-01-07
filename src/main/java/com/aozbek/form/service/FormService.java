@@ -24,6 +24,8 @@ public class FormService {
     }
 
     public void createForm(FormDto formDto) {
+        if (formDto.getFormName() == null || formDto.getFormName().trim().isEmpty())
+            formDto.setFormName("Untitled");
         User user = authService.getCurrentUser();
         String userId = user.getId();
         Form form = formMapper.map(formDto, userId);
