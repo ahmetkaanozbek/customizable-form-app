@@ -5,11 +5,9 @@ import com.aozbek.form.model.User;
 import com.aozbek.form.repository.FormRepository;
 import com.aozbek.form.repository.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 public class FormService {
