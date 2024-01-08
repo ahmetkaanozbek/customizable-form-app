@@ -1,6 +1,5 @@
 package com.aozbek.form.controller;
 
-import com.aozbek.form.exceptions.FieldNotFoundException;
 import com.aozbek.form.model.FormResponse;
 import com.aozbek.form.service.ResponseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/form/responses")
+@RequestMapping(value = "/form/response")
 public class ResponseController {
     final private ResponseService responseService;
 
@@ -23,19 +22,9 @@ public class ResponseController {
         this.responseService = responseService;
     }
 
-    @PostMapping(value = "/submit")
+    @PostMapping(value = "/create")
     public ResponseEntity<String> createResponse(@RequestBody List<FormResponse> formResponses) {
-        for (FormResponse formResponse : formResponses) {
-            try {
-                if (!(responseService.isValidResponseType(formResponse)))
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Field type doesn't match with the " +
-                            "expected type.");
-            } catch (FieldNotFoundException e) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("This field id doesn't match with an " +
-                        "existing one: " + formResponse.getFormFieldId());
-            }
-        }
-        responseService.saveResponse(formResponses);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Form responses saved successfully.");
+        responseService.createResponse(formResponses);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Form responses has been saved successfully.");
     }
 }
