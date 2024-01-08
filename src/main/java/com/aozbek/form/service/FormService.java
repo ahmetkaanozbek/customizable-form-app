@@ -48,6 +48,10 @@ public class FormService {
     public void deleteForm(String formId) {
         Form form = formRepository.getFormById(formId)
                 .orElseThrow(() -> new NoSuchElementException("No form exist with this id."));
+        String userId = authService.getCurrentUser().getId();
+        if (!(form.getUserId().equals(userId))) {
+            throw new UnauthorizedAccessException();
+        }
         formRepository.delete(form);
     }
 }
