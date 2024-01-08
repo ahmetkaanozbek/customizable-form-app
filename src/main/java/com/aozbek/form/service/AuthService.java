@@ -13,8 +13,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.NoSuchElementException;
-
 @Service
 public class AuthService {
 
@@ -61,6 +59,6 @@ public class AuthService {
         String username = SecurityContextHolder
                 .getContext().getAuthentication().getName();
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new NoSuchElementException("User not found for that username"));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found for that username"));
     }
 }
