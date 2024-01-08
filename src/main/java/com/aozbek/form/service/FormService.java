@@ -1,6 +1,7 @@
 package com.aozbek.form.service;
 
 import com.aozbek.form.dto.FormDto;
+import com.aozbek.form.exceptions.UnauthorizedAccessException;
 import com.aozbek.form.mapper.FormMapper;
 import com.aozbek.form.model.Form;
 import com.aozbek.form.model.User;
@@ -35,6 +36,10 @@ public class FormService {
     public void editForm(FormDto formDto, String formId) {
         Form form = formRepository.getFormById(formId)
                 .orElseThrow(() -> new NoSuchElementException("No form exist with this id."));
+        String userId = authService.getCurrentUser().getId();
+        if (!(form.getUserId().equals(userId))) {
+            throw new UnauthorizedAccessException();
+        }
         form.setFormName(formDto.getFormName());
         form.setDescription(formDto.getDescription());
         formRepository.save(form);
