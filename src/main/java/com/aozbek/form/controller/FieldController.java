@@ -34,4 +34,12 @@ public class FieldController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body("Fields update has been made successfully.");
     }
+
+    @DeleteMapping(value = "/edit/{formId}")
+    public ResponseEntity<String> deleteField(@RequestBody FormField formField,
+                                              @PathVariable String formId) {
+        fieldService.deleteField(formField, formId);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body("A field has been deleted successfully.");
+    }
 }

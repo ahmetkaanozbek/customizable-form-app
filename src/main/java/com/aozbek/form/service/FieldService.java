@@ -64,6 +64,19 @@ public class FieldService {
         }
     }
 
+    public void deleteField(FormField formField, String formId) {
+        String userId = authService.getCurrentUser().getId();
+        Form form = formRepository.getFormById(formId)
+                .orElseThrow(() -> new FormNotFoundException(
+                        "There is no available form in database with this ID: " + formId));
+        if (!(form.getUserId().equals(userId)))
+            throw new UnauthorizedAccessException();
+        FormField currentFormField = fieldRepository.getFormFieldById(formField.getId())
+                .orElseThrow(() -> new FieldNotFoundException(
+                        "There is no available field in database with this ID: " + formField.getId()));
+        fieldRepository.delete(currentFormField);
+    }
+
     public boolean isValidFieldType(FormField formField) {
         // FieldTypes is the enum for all possible field types.
         String fieldType = formField.getFieldType().toUpperCase();
