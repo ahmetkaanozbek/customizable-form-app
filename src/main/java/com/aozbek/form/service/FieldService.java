@@ -30,10 +30,13 @@ public class FieldService {
     }
 
     public void createFields(List<FormField> formFields, String formId) {
+        String userId = authService.getCurrentUser().getId();
+        Form form = formRepository.getFormById(formId)
+                .orElseThrow(() -> new FormNotFoundException(
+                        "There is no available form in database with this ID: " + formId));
+        if (!(form.getUserId().equals(userId)))
+            throw new UnauthorizedAccessException();
         for (FormField formField : formFields) {
-            formRepository.getFormById(formId)
-                    .orElseThrow(() -> new FormNotFoundException(
-                            "There is no available form in database with this ID: " + formField.getFormId()));
             if (!(isValidFieldType(formField))) {
                 throw new FieldTypeIsNotValidException();
             }
