@@ -17,6 +17,7 @@ public class UserController {
     UserService userService;
     @Autowired
     UserController(UserService userService) { this.userService = userService; }
+    /*
     @PostMapping(value = "/no-usage")
     ResponseEntity<String> createUser(@RequestBody @Valid User user) {
 
@@ -26,4 +27,5 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This Username already exists.");
         }
     }
+    */
 }
