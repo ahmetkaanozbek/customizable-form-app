@@ -5,10 +5,7 @@ import com.aozbek.form.service.FieldService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,10 +19,19 @@ public class FieldController {
         this.fieldService = fieldService;
     }
 
-    @PostMapping(value = "/create")
-    public ResponseEntity<String> createFields(@RequestBody List<FormField> formFields) {
-        fieldService.createFields(formFields);
+    @PostMapping(value = "/edit/{formId}")
+    public ResponseEntity<String> createFields(@RequestBody List<FormField> formFields,
+                                               @PathVariable String formId) {
+        fieldService.createFields(formFields, formId);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body("Fields have been created successfully.");
+    }
+
+    @PatchMapping(value = "/edit/{formId}")
+    public ResponseEntity<String> updateFields(@RequestBody List<FormField> formFields,
+                                               @PathVariable String formId) {
+        fieldService.updateFields(formFields, formId);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body("Fields update has been made successfully.");
     }
 }
