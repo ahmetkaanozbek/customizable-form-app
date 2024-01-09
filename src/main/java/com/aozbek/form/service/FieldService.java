@@ -77,6 +77,16 @@ public class FieldService {
         fieldRepository.delete(currentFormField);
     }
 
+    public List<FormField> getFieldsAndForm(String formId) {
+        String userId = authService.getCurrentUser().getId();
+        Form form = formRepository.getFormById(formId)
+                .orElseThrow(() -> new FormNotFoundException(
+                        "There is no available form in database with this ID: " + formId));
+        if (!(form.getUserId().equals(userId)))
+            throw new UnauthorizedAccessException();
+        return fieldRepository.findAllByFormId(formId);
+    }
+
     public boolean isValidFieldType(FormField formField) {
         // FieldTypes is the enum for all possible field types.
         String fieldType = formField.getFieldType().toUpperCase();

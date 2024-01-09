@@ -42,4 +42,10 @@ public class FieldController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body("A field has been deleted successfully.");
     }
+
+    @GetMapping(value = "/get/{formId}")
+    public ResponseEntity<List<FormField>> getFieldsAndForm(@PathVariable String formId) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(fieldService.getFieldsAndForm(formId));
+    }
 }
