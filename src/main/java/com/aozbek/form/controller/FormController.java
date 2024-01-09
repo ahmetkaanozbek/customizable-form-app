@@ -32,8 +32,8 @@ public class FormController {
     }
 
     @DeleteMapping(value = "/delete/{formId}")
-    public ResponseEntity<String> deleteForm(@PathVariable String formId) {
-        formService.deleteForm(formId);
+    public ResponseEntity<String> deleteFormAndFields(@PathVariable String formId) {
+        formService.deleteFormAndFields(formId);
         return ResponseEntity.status(HttpStatus.OK).body(
                 "Form has been deleted successfully."
         );
