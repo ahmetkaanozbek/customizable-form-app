@@ -1,6 +1,7 @@
 package com.aozbek.form.controller;
 
 import com.aozbek.form.dto.FormDto;
+import com.aozbek.form.model.Form;
 import com.aozbek.form.service.FormService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,11 +17,9 @@ public class FormController {
     public FormController(FormService formService) { this.formService = formService; }
 
     @PostMapping(value = "/create")
-    public ResponseEntity<String> createForm(@RequestBody FormDto formDto) {
-        formService.createForm(formDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-                "A new form has been created successfully."
-        );
+    public ResponseEntity<Form> createForm(@RequestBody FormDto formDto) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(formService.createForm(formDto));
     }
 
     @PatchMapping(value = "/edit/{formId}")
