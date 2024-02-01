@@ -273,4 +273,87 @@ class FieldServiceTest {
         assertThrows(FieldTypeIsNotValidException.class,
                 () -> underTestfieldService.updateFields(formFields, testForm.getId()));
     }
+
+    @Test
+    void deleteField_checkIfFieldDeletionSuccessfullyMadeByAuthorizedUserAndMadeForExistingFormAndField() {
+        // given
+        User testUser = new User("1", "testUser", "testPassword");
+        Form testForm = new Form("2", "testFormName", "testFormDescription", Instant.now(), testUser.getId());
+        FormField testFormField = new FormField("3", "sample", "number", testForm.getId());
+
+        // mockBehavior
+        when(authService.getCurrentUser())
+                .thenReturn(testUser);
+        when(formRepository.getFormById(testForm.getId()))
+                .thenReturn(Optional.of(testForm));
+        when(fieldRepository.getFormFieldById(testFormField.getId()))
+                .thenReturn(Optional.of(testFormField));
+
+        // when
+        underTestfieldService.deleteField(testFormField, testForm.getId());
+
+        // then
+        verify(fieldRepository).delete(testFormField);
+    }
+
+    @Test
+    void deleteField_checkIfFormNotFoundExceptionIsThrownWhenNoFormIsFoundWithTheGivenId() {
+        // given
+        User testUser = new User("1", "testUser", "testPassword");
+        Form testForm = new Form("2", "testFormName", "testFormDescription", Instant.now(), testUser.getId());
+        FormField testFormField = new FormField("3", "sample", "number", testForm.getId());
+
+        // mockBehavior
+        when(authService.getCurrentUser())
+                .thenReturn(testUser);
+        when(formRepository.getFormById(testForm.getId()))
+                .thenThrow(FormNotFoundException.class);
+
+        // when/then
+        assertThrows(FormNotFoundException.class,
+                () -> underTestfieldService.deleteField(testFormField, testForm.getId()));
+        verify(fieldRepository, never()).delete(testFormField);
+    }
+
+    @Test
+    void deleteField_checkIfUnauthorizedAccessExceptionIsThrownWhenAUserDoesntHavePermissionToDeleteThatField() {
+        // given
+        User testUser = new User("1", "testUser", "testPassword");
+        User unauthorizedUser = new User("4", "testUser", "testPassword");
+        Form testForm = new Form("2", "testFormName", "testFormDescription", Instant.now(), testUser.getId());
+        FormField testFormField = new FormField("3", "sample", "number", testForm.getId());
+
+        // mockBehavior
+        when(authService.getCurrentUser())
+                .thenReturn(unauthorizedUser);
+        when(formRepository.getFormById(testForm.getId()))
+                .thenReturn(Optional.of(testForm));
+
+        // when/then
+        assertNotEquals(testUser.getId(), unauthorizedUser.getId());
+        assertThrows(UnauthorizedAccessException.class,
+                () -> underTestfieldService.deleteField(testFormField, testForm.getId()));
+        verify(fieldRepository, never()).delete(testFormField);
+    }
+
+    @Test
+    void deleteField_checkIfFieldNotFoundExceptionIsThrownWhenNoExistingFormFieldWithTheGivenId() {
+        // given
+        User testUser = new User("1", "testUser", "testPassword");
+        Form testForm = new Form("2", "testFormName", "testFormDescription", Instant.now(), testUser.getId());
+        FormField testFormField = new FormField("3", "sample", "number", testForm.getId());
+
+        // mockBehavior
+        when(authService.getCurrentUser())
+                .thenReturn(testUser);
+        when(formRepository.getFormById(testForm.getId()))
+                .thenReturn(Optional.of(testForm));
+        when(fieldRepository.getFormFieldById(testFormField.getId()))
+                .thenThrow(FieldNotFoundException.class);
+
+        // when/then
+        assertThrows(FieldNotFoundException.class,
+                () -> underTestfieldService.deleteField(testFormField, testForm.getId()));
+        verify(fieldRepository, never()).delete(testFormField);
+    }
 }
