@@ -166,7 +166,6 @@ class FieldServiceTest {
         }
     }
 
-
     @Test
     void updateFields_checkIfFormNotFoundExceptionIsThrownWhenThereIsNoAvailableFormWithThatFormId() {
         // given
@@ -355,5 +354,62 @@ class FieldServiceTest {
         assertThrows(FieldNotFoundException.class,
                 () -> underTestfieldService.deleteField(testFormField, testForm.getId()));
         verify(fieldRepository, never()).delete(testFormField);
+    }
+
+    @Test
+    void getFieldsAndForm_checkIfItCanGetFormAndFieldsBelongsToThatFormSuccessfully() {
+        // given
+        User testUser = new User("1", "testUser", "testPassword");
+        Form testForm = new Form("2", "testFormName", "testFormDescription", Instant.now(), testUser.getId());
+
+        // mockBehavior
+        when(authService.getCurrentUser())
+                .thenReturn(testUser);
+        when(formRepository.getFormById(testForm.getId()))
+                .thenReturn(Optional.of(testForm));
+
+        // when
+        underTestfieldService.getFieldsAndForm(testForm.getId());
+
+        // then
+        ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
+        verify(fieldRepository).findAllByFormId(argumentCaptor.capture());
+        assertEquals(testForm.getId(), argumentCaptor.getValue());
+    }
+
+    @Test
+    void getFieldsAndForm_checkIfFormNotFoundExceptionIsThrownWhenThereIsNoExistingFormInDatabaseWithTheGivenId() {
+        // given
+        User testUser = new User("1", "testUser", "testPassword");
+        Form testForm = new Form("2", "testFormName", "testFormDescription", Instant.now(), testUser.getId());
+
+        // mockBehavior
+        when(authService.getCurrentUser())
+                .thenReturn(testUser);
+        when(formRepository.getFormById(testForm.getId()))
+                .thenThrow(FormNotFoundException.class);
+
+        // when/then
+        assertThrows(FormNotFoundException.class,
+                () -> underTestfieldService.getFieldsAndForm(testForm.getId()));
+        verify(fieldRepository, never()).getFormFieldById(testForm.getId());
+    }
+    @Test
+    void getFieldsAndForm_checkIfUnauthorizedAccessExceptionIsThrownWhenAnAuthorizedUserTryToGetFormAndFields() {
+        // given
+        User testUser = new User("1", "testUser", "testPassword");
+        User unauthorizedTestUser = new User("3", "testUser", "testPassword");
+        Form testForm = new Form("2", "testFormName", "testFormDescription", Instant.now(), testUser.getId());
+
+        // mockBehavior
+        when(authService.getCurrentUser())
+                .thenReturn(unauthorizedTestUser);
+        when(formRepository.getFormById(testForm.getId()))
+                .thenReturn(Optional.of(testForm));
+
+        // when/then
+        assertThrows(UnauthorizedAccessException.class,
+                () -> underTestfieldService.getFieldsAndForm(testForm.getId()));
+        verify(fieldRepository, never()).getFormFieldById(testForm.getId());
     }
 }
