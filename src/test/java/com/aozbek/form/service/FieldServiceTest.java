@@ -1,6 +1,6 @@
 package com.aozbek.form.service;
 
-import com.aozbek.form.exceptions.FieldTypeIsNotExpectedType;
+import com.aozbek.form.exceptions.FieldNotFoundException;
 import com.aozbek.form.exceptions.FieldTypeIsNotValidException;
 import com.aozbek.form.exceptions.FormNotFoundException;
 import com.aozbek.form.exceptions.UnauthorizedAccessException;
@@ -131,5 +131,146 @@ class FieldServiceTest {
         assertThrows(FieldTypeIsNotValidException.class,
                 () -> underTestfieldService.createFields(formFields, testForm.getId()));
         verify(fieldRepository, never()).saveAll(formFields);
+    }
+
+    @Test
+    void updateFields_checkIfFieldUpdateSuccessfullyDoneByAuthorizedUserAndWithAnExistingFormAndFormFieldAndWithAValidFieldType() {
+        // given
+        User testUser = new User("1", "testUser", "testPassword");
+        Form testForm = new Form("2", "testFormName", "testFormDescription", Instant.now(), testUser.getId());
+        List<FormField> formFields = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            FormField formField = new FormField(String.valueOf(i), "test", "text", testForm.getId());
+            formFields.add(formField);
+        }
+
+        // mockBehavior
+        when(authService.getCurrentUser())
+                .thenReturn(testUser);
+        when(formRepository.getFormById(testForm.getId()))
+                .thenReturn(Optional.of(testForm));
+        for (FormField formField : formFields) {
+            when(fieldRepository.getFormFieldById(formField.getId()))
+                    .thenReturn(Optional.of(formField));
+        }
+
+        // when
+        underTestfieldService.updateFields(formFields, testForm.getId());
+
+        // then
+        for (FormField formField : formFields) {
+            FormField updatedFormField = fieldRepository.getFormFieldById(formField.getId()).orElse(null);
+            assertNotNull(updatedFormField);
+            assertEquals(formField.getFieldType(), updatedFormField.getFieldType());
+            assertEquals(formField.getFieldLabel(), updatedFormField.getFieldLabel());
+        }
+    }
+
+
+    @Test
+    void updateFields_checkIfFormNotFoundExceptionIsThrownWhenThereIsNoAvailableFormWithThatFormId() {
+        // given
+        User testUser = new User("1", "testUser", "testPassword");
+        Form testForm = new Form("2", "testFormName", "testFormDescription", Instant.now(), testUser.getId());
+        FormField testFormField = mock(FormField.class);
+        testFormField.setId("3");
+        testFormField.setFieldLabel("sample");
+        testFormField.setFieldType("text");
+        testFormField.setFormId(testForm.getId());
+        List<FormField> formFields = new ArrayList<>();
+        formFields.add(testFormField);
+
+        // mockBehavior
+        when(authService.getCurrentUser())
+                .thenReturn(testUser);
+        when(formRepository.getFormById(testForm.getId()))
+                .thenThrow(FormNotFoundException.class);
+
+        // when/then
+        assertThrows(FormNotFoundException.class,
+                () -> underTestfieldService.updateFields(formFields, testForm.getId()));
+        verify(testFormField, never()).setFieldType(testFormField.getFieldType());
+        verify(testFormField, never()).setFieldLabel(testFormField.getFieldLabel());
+    }
+
+    @Test
+    void updateFields_checkIfUnauthorizedAccessExceptionIsThrownWhenAuthenticatedUserDoesntMatchWithUserAssociatedToForm() {
+        // given
+        User testUser = new User("1", "testUser", "testPassword");
+        Form testForm = new Form("2", "testFormName", "testFormDescription", Instant.now(), testUser.getId());
+        User unauthorizedTestUser = new User("5", "testUser", "testPassword");
+        FormField testFormField = mock(FormField.class);
+        testFormField.setId("3");
+        testFormField.setFieldLabel("sample");
+        testFormField.setFieldType("text");
+        testFormField.setFormId(testForm.getId());
+        List<FormField> formFields = new ArrayList<>();
+        formFields.add(testFormField);
+
+        // mockBehavior
+        when(authService.getCurrentUser())
+                .thenReturn(unauthorizedTestUser);
+        when(formRepository.getFormById(testForm.getId()))
+                .thenReturn(Optional.of(testForm));
+
+        // when/then
+        // testUser's id doesn't match with the unauthorizedTestUser's id. So, exception will be thrown.
+        assertThrows(UnauthorizedAccessException.class,
+                () -> underTestfieldService.updateFields(formFields, testForm.getId()));
+        verify(testFormField, never()).setFieldType(testFormField.getFieldType());
+        verify(testFormField, never()).setFieldLabel(testFormField.getFieldLabel());
+    }
+
+    @Test
+    void updateFields_checkIfFieldNotFoundExceptionIsThrownWhenOneOfTheFormFieldsHasNotFoundInDatabase() {
+        // given
+        User testUser = new User("1", "testUser", "testPassword");
+        Form testForm = new Form("2", "testFormName", "testFormDescription", Instant.now(), testUser.getId());
+        FormField notExistTestFormField = mock(FormField.class);
+        notExistTestFormField.setId("3");
+        notExistTestFormField.setFieldLabel("sample");
+        notExistTestFormField.setFieldType("text");
+        notExistTestFormField.setFormId(testForm.getId());
+        List<FormField> formFields = new ArrayList<>();
+        formFields.add(notExistTestFormField);
+
+        // mockBehavior
+        when(authService.getCurrentUser())
+                .thenReturn(testUser);
+        when(formRepository.getFormById(testForm.getId()))
+                .thenReturn(Optional.of(testForm));
+        when(fieldRepository.getFormFieldById(notExistTestFormField.getId()))
+                .thenThrow(FieldNotFoundException.class);
+
+        // when/then
+        assertThrows(FieldNotFoundException.class,
+                () -> underTestfieldService.updateFields(formFields, testForm.getId()));
+        verify(notExistTestFormField, never()).setFieldType(notExistTestFormField.getFieldType());
+        verify(notExistTestFormField, never()).setFieldLabel(notExistTestFormField.getFieldLabel());
+    }
+
+    @Test
+    void updateFields_checkIfFieldTypeIsNotValidExceptionIsThrownWhenOneOfTheFormFieldsHasInvalidFieldType() {
+        // given
+        User testUser = new User("1", "testUser", "testPassword");
+        Form testForm = new Form("2", "testFormName", "testFormDescription", Instant.now(), testUser.getId());
+        FormField invalidTypeTestFormField = new FormField("3", "sample", "invalidType", testForm.getId());
+        List<FormField> formFields = new ArrayList<>();
+        formFields.add(invalidTypeTestFormField);
+
+        // mockBehavior
+        when(authService.getCurrentUser())
+                .thenReturn(testUser);
+        when(formRepository.getFormById(testForm.getId()))
+                .thenReturn(Optional.of(testForm));
+        when(fieldRepository.getFormFieldById(invalidTypeTestFormField.getId()))
+                .thenReturn(Optional.of(invalidTypeTestFormField));
+
+        // when/then
+        for (FormField formField : formFields) {
+            assertFalse(underTestfieldService.isValidFieldType(formField));
+        }
+        assertThrows(FieldTypeIsNotValidException.class,
+                () -> underTestfieldService.updateFields(formFields, testForm.getId()));
     }
 }
