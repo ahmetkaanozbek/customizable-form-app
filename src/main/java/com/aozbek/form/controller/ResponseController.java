@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/form/response")
+@RequestMapping(value = "/api/form/response")
 public class ResponseController {
     final private ResponseService responseService;
 

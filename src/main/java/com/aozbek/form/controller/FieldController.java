@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/form/fields")
+@RequestMapping(value = "/api/form/fields")
 public class FieldController {
     final private FieldService fieldService;
 

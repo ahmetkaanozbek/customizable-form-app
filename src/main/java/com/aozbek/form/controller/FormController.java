@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/form")
+@RequestMapping(value = "/api/form")
 public class FormController {
     private final FormService formService;
 
