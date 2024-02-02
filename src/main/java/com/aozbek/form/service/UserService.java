@@ -1,32 +1,28 @@
 package com.aozbek.form.service;
 
+import com.aozbek.form.exceptions.UnauthorizedAccessException;
 import com.aozbek.form.model.User;
 import com.aozbek.form.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
-    /*
+
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final AuthService authService;
 
-    @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository,
+                       AuthService authService) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+        this.authService = authService;
     }
 
-    public boolean createUser(User user) {
-        if (!(userRepository.existsByUsername(user.getUsername()))) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            userRepository.save(user);
-            return true;
+    public void deleteUser(String userId) {
+        User currentUser = authService.getCurrentUser();
+        if (!(currentUser.getId().equals(userId))) {
+            throw new UnauthorizedAccessException();
         }
-        else
-            return false;
+        userRepository.deleteById(userId);
     }
-    */
 }
 

@@ -12,7 +12,8 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/api/form/fields")
 public class FieldController {
-    final private FieldService fieldService;
+
+    private final FieldService fieldService;
 
     @Autowired
     public FieldController(FieldService fieldService) {

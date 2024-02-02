@@ -1,31 +1,23 @@
 package com.aozbek.form.controller;
 
-import com.aozbek.form.model.User;
 import com.aozbek.form.service.UserService;
-import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping
+@RequestMapping(value = "/api/user")
 public class UserController {
-    UserService userService;
-    @Autowired
-    UserController(UserService userService) { this.userService = userService; }
-    /*
-    @PostMapping(value = "/no-usage")
-    ResponseEntity<String> createUser(@RequestBody @Valid User user) {
 
-        if (userService.createUser(user))
-            return ResponseEntity.status(HttpStatus.CREATED).body("Your registration has been successful.");
-        else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This Username already exists.");
-        }
+    private final UserService userService;
+
+    UserController(UserService userService) {
+        this.userService = userService;
     }
-    */
+
+    @DeleteMapping(value = "/delete/{userId}")
+    public ResponseEntity<String> deleteUser(@PathVariable String userId) {
+        userService.deleteUser(userId);
+        return ResponseEntity.status(HttpStatus.OK).body("You have deleted your registered user successfully.");
+    }
 }

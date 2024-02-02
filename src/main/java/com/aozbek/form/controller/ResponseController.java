@@ -15,7 +15,8 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/api/form/response")
 public class ResponseController {
-    final private ResponseService responseService;
+
+    private final ResponseService responseService;
 
     @Autowired
     ResponseController(ResponseService responseService) {
