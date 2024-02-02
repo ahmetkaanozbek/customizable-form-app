@@ -1,5 +1,6 @@
 package com.aozbek.form.repository;
 
+import com.aozbek.form.model.Form;
 import com.aozbek.form.model.FormField;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,9 +9,12 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.util.Optional;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
-import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataMongoTest
 @Testcontainers
@@ -20,24 +24,25 @@ public class FieldRepositoryTest {
     @Autowired
     MongoTemplate mongoTemplate;
     @Autowired
-    FieldRepository underTest;
+    FieldRepository fieldRepository;
 
     @Test
-    void itShouldGetFormFieldById() {
-
+    void findAllByFormId_checksIfItFindsAllFormFieldsByFormIdSuccessfully() {
         //given
-        FormField formField = new FormField(
-                "5",
-                "School",
-                "text",
-                "2"
-        );
-        mongoTemplate.save(formField);
+        Form testForm = new Form("2", "test", "testForm", Instant.now(), "1");
+        List<FormField> formFields = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            FormField testFormField = new FormField(String.valueOf(i), "sample", "text", testForm.getId());
+            formFields.add(testFormField);
+            mongoTemplate.save(testFormField);
+        }
 
         //when
-        Optional<FormField> searchedFormField = underTest.getFormFieldById("5");
+        List<FormField> expectedFormFields = fieldRepository.findAllByFormId(testForm.getId());
 
         //then
-        assertThat(searchedFormField).isPresent();
+        assertEquals(expectedFormFields.size(), formFields.size());
+        assertTrue(expectedFormFields.containsAll(formFields));
+        assertTrue(formFields.containsAll(expectedFormFields));
     }
 }

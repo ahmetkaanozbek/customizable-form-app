@@ -16,7 +16,7 @@ public class FormField {
     private String id;
     private String fieldLabel;
     private String fieldType;
-    // Reference to Form
+    /* reference to form */
     private String formId;
 
     @Override
