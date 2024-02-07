@@ -3,6 +3,8 @@ package com.aozbek.form.service;
 import com.aozbek.form.dto.AuthResponse;
 import com.aozbek.form.dto.LoginRequest;
 import com.aozbek.form.dto.RegisterRequest;
+import com.aozbek.form.exceptions.FieldNotFoundException;
+import com.aozbek.form.exceptions.UsernameAlreadyExistsException;
 import com.aozbek.form.model.CustomUserDetails;
 import com.aozbek.form.model.User;
 import com.aozbek.form.repository.UserRepository;
@@ -12,6 +14,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class AuthService {
@@ -33,6 +37,10 @@ public class AuthService {
     }
 
     public void signup(RegisterRequest registerRequest) {
+        Optional<User> existingUserWithUsername = userRepository.findByUsername(registerRequest.getUsername());
+        if (existingUserWithUsername.isPresent()) {
+            throw new UsernameAlreadyExistsException();
+        }
         User user = new User();
         user.setUsername(registerRequest.getUsername());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
