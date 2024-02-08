@@ -16,8 +16,15 @@ public class UserController {
     }
 
     @DeleteMapping(value = "/delete/{userId}")
-    public ResponseEntity<String> deleteUser(@PathVariable String userId) {
-        userService.deleteUser(userId);
+    public ResponseEntity<String> deleteUserByAdmin(@PathVariable String userId) {
+        userService.deleteUserByAdmin(userId);
+        return ResponseEntity.status(HttpStatus.OK).body("A user which has the id of " + userId
+                + " has been deleted successfully.");
+    }
+
+    @DeleteMapping(value = "/delete")
+    public ResponseEntity<String> deleteUserByUser() {
+        userService.deleteUserByUser();
         return ResponseEntity.status(HttpStatus.OK).body("You have deleted your registered user successfully.");
     }
 }

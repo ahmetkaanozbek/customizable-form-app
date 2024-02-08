@@ -21,7 +21,6 @@ public class FieldService {
     private final FormRepository formRepository;
     private final AuthService authService;
 
-    @Autowired
     public FieldService(FieldRepository fieldRepository,
                         FormRepository formRepository,
                         AuthService authService) {

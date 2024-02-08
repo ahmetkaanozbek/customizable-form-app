@@ -18,7 +18,6 @@ public class ResponseController {
 
     private final ResponseService responseService;
 
-    @Autowired
     ResponseController(ResponseService responseService) {
         this.responseService = responseService;
     }

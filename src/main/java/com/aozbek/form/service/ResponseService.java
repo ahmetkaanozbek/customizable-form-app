@@ -17,7 +17,6 @@ public class ResponseService {
     private final ResponseRepository responseRepository;
     private final FieldRepository fieldRepository;
 
-    @Autowired
     public ResponseService(ResponseRepository responseRepository, FieldRepository fieldRepository) {
         this.responseRepository = responseRepository;
         this.fieldRepository = fieldRepository;

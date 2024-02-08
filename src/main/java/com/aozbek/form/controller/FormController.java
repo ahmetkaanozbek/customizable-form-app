@@ -14,7 +14,6 @@ public class FormController {
 
     private final FormService formService;
 
-    @Autowired
     public FormController(FormService formService) { this.formService = formService; }
 
     @PostMapping(value = "/create")

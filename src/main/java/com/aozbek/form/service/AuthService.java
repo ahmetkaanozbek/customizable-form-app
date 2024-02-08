@@ -3,7 +3,6 @@ package com.aozbek.form.service;
 import com.aozbek.form.dto.AuthResponse;
 import com.aozbek.form.dto.LoginRequest;
 import com.aozbek.form.dto.RegisterRequest;
-import com.aozbek.form.exceptions.FieldNotFoundException;
 import com.aozbek.form.exceptions.UsernameAlreadyExistsException;
 import com.aozbek.form.model.CustomUserDetails;
 import com.aozbek.form.model.User;

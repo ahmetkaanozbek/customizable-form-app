@@ -1,8 +1,8 @@
 package com.aozbek.form.service;
 
-import com.aozbek.form.exceptions.UnauthorizedAccessException;
 import com.aozbek.form.model.User;
 import com.aozbek.form.repository.UserRepository;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,12 +17,14 @@ public class UserService {
         this.authService = authService;
     }
 
-    public void deleteUser(String userId) {
-        User currentUser = authService.getCurrentUser();
-        if (!(currentUser.getId().equals(userId))) {
-            throw new UnauthorizedAccessException();
-        }
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public void deleteUserByAdmin(String userId) {
         userRepository.deleteById(userId);
+    }
+
+    public void deleteUserByUser() {
+        User currentUser = authService.getCurrentUser();
+        userRepository.deleteById(currentUser.getId());
     }
 }
 
